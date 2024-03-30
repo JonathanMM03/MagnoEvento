@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="Jonathan Moreno Muñoz">
+    <meta name="author" content="Oscar Octavio Alvarado Cornejo">
+    <style>
+        @import("https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css");
+        @import("https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js");
+        @import("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css");
+        /* Estilos para el diploma de asistencia a conferencias */
+        .diploma-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 2px solid #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body{
+            background-color=#000;
+        }
+
+        main{
+            background-color=#FFF;
+        }
+
+        .diploma-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .diploma-content {
+            text-align: justify;
+            margin-bottom: 20px;
+        }
+
+        .diploma-signature {
+            float: left;
+            margin-top: 20px;
+            margin-right: 50px;
+        }
+
+        .diploma-signature-second {
+            float: right;
+            margin-top: 20px;
+            margin-left: 50px;
+        }
+
+        .diploma-logo {
+            position: absolute;
+            top: 20px;
+        }
+
+        .diploma-logo-left {
+            left: 20px;
+        }
+
+        .diploma-logo-right {
+            right: 20px;
+        }
+
+        .diploma-logo-university {
+            left: 350px;
+            top: 450px;
+        }
+
+        .diploma-image-container {
+            border: 2px solid #000;
+            padding: 20px;
+            border-radius: 5px;
+            width: fit-content;
+            margin: auto;
+        }
+
+        .diploma-image-container img {
+            max-width: 200px;
+            max-height: 200px;
+            display: block;
+            margin: auto;
+        }
+
+        /* Estilos para el registro de asistentes */
+        .registration-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 2px solid #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .registration-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .registration-content {
+            text-align: justify;
+            margin-bottom: 20px;
+        }
+
+        .registration-image-container {
+            border: 2px solid #000;
+            padding: 20px;
+            border-radius: 5px;
+            width: fit-content;
+            margin: auto;
+        }
+
+        .registration-image-container img {
+            max-width: 200px;
+            max-height: 200px;
+            display: block;
+            margin: auto;
+        }
+
+        .registration-table th,
+        .registration-table td {
+            vertical-align: middle;
+        }
+
+        /* Footer styles */
+        footer {
+            background-color: #09a387;
+            padding: 20px 0;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+
+    <title>Conference Attendance Diploma</title>
+    <link rel="stylesheet" href="css/style.css" type="text/css">
+</head>
+<body class="bg-dark">
+<main class="diploma-container bg-light">
+    <div class="diploma-logo diploma-logo-left">
+        <img src="../../img/mlogo.png" alt="Microsoft Logo" width="80">
+    </div>
+    <br>
+    <br>
+    <div class="diploma-header">
+        <h1>Diploma de asistencia a las conferencias</h1>
+    </div>
+    <div class="diploma-content">
+        <p>Este diploma es para:</p>
+        <p><strong>Nombre:</strong> <span th:text="${nombreAsistente}">[Your Name]</span></p>
+        <p><strong>Matricula:</strong> <span th:text="${matricula}">[Your Student Number]</span></p>
+        <p>Por asistir a las siguientes conferencias:</p>
+        <ol>
+            <li><span th:text="${nombreConferencia1}">[Conference 1 Name]</span></li>
+            <li><span th:text="${nombreConferencia2}">[Conference 2 Name]</span></li>
+        </ol>
+        <p>¡Felicitaciones por tu participación y ayuda a expandir tu conocimiento!</p>
+    </div>
+    <div class="diploma-signature">
+        <p>Firma del primer conferencista</p>
+        <img src="../../img/elon_firma.png" alt="Signature" width="150">
+    </div>
+    <div class="diploma-signature-second">
+        <p>Firma del segundo conferencista</p>
+        <img src="../../img/billgates-removebg-preview.png" alt="Signature" width="150">
+    </div>
+    <div class="diploma-logo diploma-logo-right">
+        <img src="../../img/spacex_logo-removebg-preview.png" alt="SpaceX Logo" width="200">
+    </div>
+    <!-- Add your university logo here -->
+    <div class="diploma-logo diploma-logo-university">
+        <img src="../../img/utlogo-removebg-preview.png" alt="University Logo" width="100">
+    </div>
+</main>
+<script>
+    // Función para cargar scripts
+    function cargarScript(url) {
+        var script = document.createElement('script');
+        script.src = url;
+        document.head.appendChild(script);
+    }
+
+    // Función para cargar todos los scripts necesarios
+    function cargarScripts() {
+        // Cargar FontAwesome
+        cargarScript('https://kit.fontawesome.com/5b2670a1a9.js');
+
+        // Cargar Bootstrap Bundle
+        cargarScript('https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js');
+
+        // Cargar SweetAlert2
+        cargarScript('https://cdn.jsdelivr.net/npm/sweetalert2@11');
+
+        // Importar jsPDF
+        cargarScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js');
+    }
+
+    // Ejecutar la función de carga de scripts cuando el DOM esté completamente cargado
+    document.addEventListener("DOMContentLoaded", function () {
+        cargarScripts();
+    });
+
+    // Generar el PDF tomando el contenido del cuerpo
+    function generarPDF() {
+        // Obtener el contenido del cuerpo de la página
+        var bodyContent = document.body.innerHTML;
+
+        // Crear un nuevo objeto jsPDF
+        var doc = new jsPDF();
+
+        // Agregar el contenido del cuerpo al PDF
+        doc.html(bodyContent, {
+            callback: function (doc) {
+                // Guardar el PDF
+                doc.save('documento.pdf');
+            }
+        });
+    }
+</script>
+</body>
+</html>

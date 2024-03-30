@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slider de Conferencias</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        #carouselExampleIndicators {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        <!-- Aquí se insertarán las slides con JavaScript -->
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Custom JavaScript -->
+<script>
+    const conferencias = [
+        {
+            "nombre": "Conferencia sobre Innovación Tecnológica",
+            "fechaInicio": "2024-02-25",
+            "fechaFin": "2024-02-28",
+            "imagen": "https://cnnespanol.cnn.com/wp-content/uploads/2019/08/190829160433-elon-musk-jack-ma-conferencia-mundial-inteligencia-artificial-portafolio-global-cnnee-00000000-full-169.jpg?quality=100&strip=info"
+        },
+        {
+            "nombre": "Conferencia sobre Filantropía y Emprendimiento",
+            "fechaInicio": "2024-02-25",
+            "fechaFin": "2024-02-28",
+            "imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdLP1O8vOTDmFPTJZLbg9Fh4x86DP8p6EaoA&usqp=CAU"
+        }
+    ];
+
+    $(document).ready(function() {
+        const carouselInner = document.querySelector('.carousel-inner');
+
+        conferencias.forEach((conferencia, index) => {
+            const card = `
+                <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                    <div class="card w-100">
+                        <img src="${conferencia.imagen}" class="card-img-top" alt="${conferencia.nombre}">
+                        <div class="card-body">
+                            <h5 class="card-title">${conferencia.nombre}</h5>
+                            <p class="card-text">Fecha: ${conferencia.fechaInicio} - ${conferencia.fechaFin}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            carouselInner.innerHTML += card;
+        });
+    });
+</script>
+
+</body>
+</html>

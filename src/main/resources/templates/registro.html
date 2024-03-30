@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Asistentes</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1 class="mb-4">Registro de Asistentes</h1>
+
+    <!-- Formulario para crear un nuevo asistente -->
+    <form id="crearAsistenteForm">
+        <div class="mb-3">
+            <label for="matricula" class="form-label">Matrícula</label>
+            <input type="text" class="form-control" id="matricula" name="matricula" required>
+        </div>
+        <div class="mb-3">
+            <label for="correo" class="form-label">Correo electrónico</label>
+            <input type="email" class="form-control" id="correo" name="correo" required>
+        </div>
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="nombre" name="nombre" required>
+        </div>
+        <div class="mb-3">
+            <label for="apellidoPaterno" class="form-label">Apellido Paterno</label>
+            <input type="text" class="form-control" id="apellidoPaterno" name="apellidoPaterno" required>
+        </div>
+        <div class="mb-3">
+            <label for="apellidoMaterno" class="form-label">Apellido Materno</label>
+            <input type="text" class="form-control" id="apellidoMaterno" name="apellidoMaterno" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Crear Asistente</button>
+    </form>
+
+    <!-- Tabla para mostrar los asistentes -->
+    <div class="mt-5">
+        <h2>Asistentes</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Matrícula</th>
+                <th>Correo electrónico</th>
+                <th>Nombre</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody id="tablaAsistentesBody">
+            <!-- Aquí se insertarán las filas de la tabla con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // Lógica para enviar el formulario y crear un nuevo asistente
+    document.getElementById('crearAsistenteForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const formData = {
+            matricula: document.getElementById('matricula').value,
+            correo: document.getElementById('correo').value,
+            gradoAcademico: 0,
+            foto: "string",
+            persona: {
+                nombre: document.getElementById('nombre').value,
+                apellidoPaterno: document.getElementById('apellidoPaterno').value,
+                apellidoMaterno: document.getElementById('apellidoMaterno').value
+            }
+        };
+
+        try {
+            const response = await fetch('/asistente/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                // Mostrar mensaje de éxito con SweetAlert2
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Asistente creado!',
+                    text: 'El asistente se ha creado exitosamente.'
+                });
+
+                // Limpiar el formulario después de la creación exitosa
+                document.getElementById('crearAsistenteForm').reset();
+
+                // Recargar la tabla de asistentes
+                cargarTablaAsistentes();
+            } else {
+                throw new Error('Hubo un problema al crear el asistente.');
+            }
+        } catch (error) {
+            // Mostrar mensaje de error con SweetAlert2
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un problema al crear el asistente. Por favor, inténtalo de nuevo.'
+            });
+        }
+    });
+
+    // Función para cargar la tabla de asistentes
+    async function cargarTablaAsistentes() {
+        try {
+            const response = await fetch('/asistente/all');
+            const data = await response.json();
+
+            const tablaAsistentesBody = document.getElementById('tablaAsistentesBody');
+            tablaAsistentesBody.innerHTML = '';
+
+            data.forEach(asistente => {
+                const fila = `
+                    <tr>
+                        <td>${asistente.matricula}</td>
+                        <td>${asistente.correo}</td>
+                        <td>${asistente.persona.nombre} ${asistente.persona.apellidoPaterno} ${asistente.persona.apellidoMaterno}</td>
+                        <td><button class="btn btn-danger btn-sm" onclick="eliminarAsistente(${asistente.idAsistente})">Eliminar</button></td>
+                    </tr>
+                `;
+                tablaAsistentesBody.innerHTML += fila;
+            });
+        } catch (error) {
+            console.error('Hubo un problema al cargar los asistentes:', error);
+        }
+    }
+
+    // Función para eliminar un asistente
+    async function eliminarAsistente(idAsistente) {
+        try {
+            const response = await fetch(`/asistente/${idAsistente}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                // Mostrar mensaje de éxito con SweetAlert2
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Asistente eliminado!',
+                    text: 'El asistente se ha eliminado exitosamente.'
+                });
+
+                // Recargar la tabla de asistentes después de la eliminación exitosa
+                cargarTablaAsistentes();
+            } else {
+                throw new Error('Hubo un problema al eliminar el asistente.');
+            }
+        } catch (error) {
+            console.error('Hubo un problema al eliminar el asistente:', error);
+            // Mostrar mensaje de error con SweetAlert2
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un problema al eliminar el asistente. Por favor, inténtalo de nuevo.'
+            });
+        }
+    }
+
+    // Cargar la tabla de asistentes al cargar la página
+    cargarTablaAsistentes();
+</script>
+
+</body>
+</html>
